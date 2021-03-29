@@ -6,6 +6,6 @@
   "author": "Tad <zlxiao97@yhaoo.com>",
   "license": "MIT",
   "dependencies": {
-    "webshot-node": "^0.18.2"
+    "puppeteer": "^8.0.0"
   }
 }
