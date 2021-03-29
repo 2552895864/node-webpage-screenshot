@@ -1,0 +1,11 @@
+{
+  "name": "node-webpage-screenshot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:2552895864/node-webpage-screenshot.git",
+  "author": "Tad <zlxiao97@yhaoo.com>",
+  "license": "MIT",
+  "dependencies": {
+    "webshot-node": "^0.18.2"
+  }
+}
