@@ -1,37 +1,34 @@
-const puppeteer = require("puppeteer");
+const express = require("express");
+const bodyParser = require("body-parser");
+const router = require("./router/index.js");
+const PORT = 1337;
 
-async function runTest() {
-  const browser = await puppeteer.launch({
-    headless: false,
-    timeout: 10000,
-    args: ["--start-maximized"],
-  });
+const app = express();
 
-  const page = await browser.newPage();
-  await page.setViewport({
-    width: 1920,
-    height: 1080,
-  });
-  const url = "http://10.3.72.39/#/screen/cebc/overview";
+app.all("*", function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Content-Length, Authorization, Accept, X-Requested-With, Cache-Control, Pragma, Referer, User-Agent"
+  );
+  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("X-Powered-By", " 3.2.1");
+  if (req.method == "OPTIONS") res.send(200);
+  else next();
+});
 
-  await page.goto(url, {
-    waitUntil: "networkidle2",
-  });
+app.use(bodyParser.json({ limit: "10mb" }));
 
-  await page.evaluate(() => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzV29yZCI6ImUxMGFkYzM5NDliYTU5YWJiZTU2ZTA1N2YyMGY4ODNlIiwiaWQiOjEsInVzZXJOYW1lIjoiYWRtaW4ifQ.zQCsV9nwFigUdkNGC3f5bpH_PMDEaalu2VOtul8NAxo";
-    sessionStorage.setItem("dc-token", token);
-  });
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+    limit: "10mb",
+  })
+);
 
-  await page.goto(url, {
-    waitUntil: "networkidle2",
-  });
+app.use("/", router());
 
-  await page.waitFor(10000);
-
-  await page.screenshot({ path: "./dist/fullpage.png", fullPage: true });
-  browser.close();
-}
-
-runTest();
+app.listen(PORT, () => {
+  console.log(`listening at port ${PORT}`);
+});
